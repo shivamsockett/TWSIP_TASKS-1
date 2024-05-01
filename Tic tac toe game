@@ -1,0 +1,93 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+// Function to draw the Tic Tac Toe board
+void DrawBoard(const vector<vector<char>>& board) {
+    for (int i = 0; i < 3; ++i) {
+        cout << " " << board[i][0] << " | " << board[i][1] << " | " << board[i][2] << endl;
+        if (i != 2) {
+            cout << "---|---|---" << endl;
+        }
+    }
+}
+
+// Function to check if a player has won
+bool CheckWin(const vector<vector<char>>& board, char player) {
+    // Check rows and columns
+    for (int i = 0; i < 3; ++i) {
+        if (board[i][0] == player && board[i][1] == player && board[i][2] == player) {
+            return true; // Row i
+        }
+        if (board[0][i] == player && board[1][i] == player && board[2][i] == player) {
+            return true; // Column i
+        }
+    }
+
+    // Check diagonals
+    if ((board[0][0] == player && board[1][1] == player && board[2][2] == player) ||
+        (board[0][2] == player && board[1][1] == player && board[2][0] == player)) {
+        return true; // Diagonals
+    }
+
+    return false;
+}
+
+// Function to check if the board is full (draw)
+bool CheckDraw(const vector<vector<char>>& board) {
+    for (int i = 0; i < 3; ++i) {
+        for (int j = 0; j < 3; ++j) {
+            if (board[i][j] == ' ') {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+int main() {
+    vector<vector<char>> board(3, vector<char>(3, ' '));
+    int row, col;
+    char currentPlayer = 'X';
+
+    cout << "Welcome to Tic Tac Toe!" << endl;
+
+    // Main game loop
+    while (true) {
+        // Draw the board
+        DrawBoard(board);
+
+        // Get player's move
+        cout << "Player " << currentPlayer << ", enter your move (row and column): ";
+        cin >> row >> col;
+
+        // Check if the chosen cell is valid
+        if (row < 0 || row >= 3 || col < 0 || col >= 3 || board[row][col] != ' ') {
+            cout << "Invalid move. Try again." << endl;
+            continue;
+        }
+
+        // Make the move
+        board[row][col] = currentPlayer;
+
+        // Check if the current player wins
+        if (CheckWin(board, currentPlayer)) {
+            DrawBoard(board);
+            cout << "Player " << currentPlayer << " wins!" << endl;
+            break;
+        }
+
+        // Check for a draw
+        if (CheckDraw(board)) {
+            DrawBoard(board);
+            cout << "It's a draw!" << endl;
+            break;
+        }
+
+        // Switch players
+        currentPlayer = (currentPlayer == 'X') ? 'O' : 'X';
+    }
+
+    return 0;
+}
